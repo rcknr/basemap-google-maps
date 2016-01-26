@@ -3,8 +3,5 @@
   description: This demo shows the easiest setup for using basemap.at tiles with Google Maps Javascript API v3
   authors:
     - Sergii Kauk
-  resources:
-    - https://maps.googleapis.com/maps/api/js
-    - https://rawgit.com/rcknr/basemap-google-maps/master/basemap-tiles.min.js
   normalize_css: no
 ...
