@@ -4,7 +4,7 @@ Use Basemap.at map tiles with Google Maps Javascript API v3
 ## Basic usage
 
 Create new `Basemap` object with the reference to your `google.maps.Map` object as a single parameter 
-([example](http://jsfiddle.net/gh/get/library/pure/rcknr/basemap-google-maps/tree/master/demo/)). This will overlay `geolandbasemap` or `"bmaphidpi"` layers (if retina display is detected) over standard `MapTypeId.ROADMAP` as well as `"bmaporthofoto30cm"` and `"bmapoverlay"` above `MapTypeId.SATELLITE` and `MapTypeId.HYBRID` respectively. You can switch between layers using standard Google Maps type control. Due to `"bmaporthofoto30cm"` layer being composed out of JPG tiles, you'll see gray area around austrian borders. The map will be also locked withing borders of Austria according to [EPSG:31297](http://spatialreference.org/ref/epsg/mgi-austria-lambert/) bounds.
+([example](http://jsfiddle.net/gh/get/library/pure/rcknr/basemap-google-maps/tree/master/demo/)). This will overlay `"geolandbasemap"` or `"bmaphidpi"` layers (if retina display is detected) over standard `MapTypeId.ROADMAP` as well as `"bmaporthofoto30cm"` and `"bmapoverlay"` above `MapTypeId.SATELLITE` and `MapTypeId.HYBRID` respectively. You can switch between layers using standard Google Maps type control. Due to `"bmaporthofoto30cm"` layer being composed out of JPG tiles, you'll see gray area around austrian borders. The map will be also locked withing borders of Austria according to [EPSG:31297](http://spatialreference.org/ref/epsg/mgi-austria-lambert/) bounds.
 
 ## Custom layers, overlays, what have you
 
@@ -29,3 +29,7 @@ map.overlayMapTypes.push(new google.maps.BasemapMapType('geolandbasemap'));
 ```
 
 For further reference, please see [Google Maps API docs](https://developers.google.com/maps/documentation/javascript/maptypes).
+
+## Usage policy
+
+Basemap.at map tiles are licensed under [Creative Commons license](http://creativecommons.org/licenses/by/3.0/at/deed.de). Be sure to include the link to [basemap.at](http://basemap.at/) as their [usage policy](http://basemap.at/#sec-nutzung) requires.
