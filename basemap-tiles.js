@@ -120,7 +120,13 @@
           if (y > maxY) y = maxY;
 
           map.setCenter(new google.maps.LatLng(y, x));
-        });
+        }),
+        attribution = document.createElement('div');
+
+      attribution.innerHTML = 'Datenquelle: <a href="http://www.basemap.at/" target="_blank">basemap.at</a>';
+      attribution.style.cssText = 'white-space: nowrap;background-color: #fff;opacity: .7;padding: 1px 5px 2px;font-size: 10px';
+
+	    map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(attribution);
 
       map.overlayMapTypes.clear();
       map.overlayMapTypes.push(baseType);
