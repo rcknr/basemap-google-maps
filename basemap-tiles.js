@@ -109,24 +109,6 @@
             map.overlayMapTypes.push(baseType);
           }
         }),
-        centerChangeListener = google.maps.event.addListener(map, 'center_changed', function() {
-          if (allowedBounds.contains(map.getCenter())) return;
-
-          var c = map.getCenter(),
-            x = c.lng(),
-            y = c.lat(),
-            maxX = allowedBounds.getNorthEast().lng(),
-            maxY = allowedBounds.getNorthEast().lat(),
-            minX = allowedBounds.getSouthWest().lng(),
-            minY = allowedBounds.getSouthWest().lat();
-
-          if (x < minX) x = minX;
-          if (x > maxX) x = maxX;
-          if (y < minY) y = minY;
-          if (y > maxY) y = maxY;
-
-          map.setCenter(new google.maps.LatLng(y, x));
-        }),
         attribution = document.createElement('div');
 
       attribution.innerHTML = 'Datenquelle: <a href="http://www.basemap.at/" target="_blank">basemap.at</a>';
@@ -136,6 +118,13 @@
 
       map.overlayMapTypes.clear();
       map.overlayMapTypes.push(baseType);
+
+      map.setOptions({
+        restriction: {
+          latLngBounds: allowedBounds,
+          strictBounds: false,
+        },
+      });
     }
   }
 
