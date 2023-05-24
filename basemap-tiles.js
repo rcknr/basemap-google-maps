@@ -1,11 +1,12 @@
 (function() {
 
   var types = {
-    geolandbasemap: 'png',
-    bmapgrau: 'png',
-    bmaphidpi: 'jpg',
-    bmaporthofoto30cm: 'jpg',
-    bmapoverlay: 'png'
+    geolandbasemap: { format: 'png' },
+    bmapgrau: { format: 'png' },
+    bmaphidpi: { format: 'jpg' },
+    bmapgelaende: { format: 'jpg', style: 'grau' },
+    bmaporthofoto30cm: { format: 'jpg' },
+    bmapoverlay: { format: 'png' }
   };
 
   /*
@@ -29,8 +30,8 @@
 
 
     google.maps.BasemapMapType = function(name) {
-      if (!(name in types)) throw 'Map type not found';
-      var ext = types[name];
+      if (!(name in types)) throw new Error('Map type not found');
+      let { format, style = 'normal' } = types[name];
 
       return google.maps.ImageMapType.call(this, {
         "getTileUrl": function(coord, zoom) {
@@ -39,7 +40,6 @@
             wx = coord.x % numTiles,
             x = (wx < 0) ? wx + numTiles : wx,
             y = coord.y,
-            index = (zoom + x + y) % 4,
             project = function(latLng) {
               var siny = Math.sin(latLng.lat * Math.PI / 180);
               return {
@@ -60,12 +60,13 @@
 
           if (x > ne.x || y < ne.y || x < sw.x || y > sw.y) return null;
 
-          return "//mapsneu.wien.gv.at/basemap/{N}/normal/google3857/{Z}/{Y}/{X}.{E}"
+          return "//mapsneu.wien.gv.at/basemap/{N}/{S}/google3857/{Z}/{Y}/{X}.{F}"
             .replace("{N}", name)
+            .replace("{S}", style)
             .replace("{Z}", zoom)
             .replace("{X}", x)
             .replace("{Y}", y)
-            .replace("{E}", ext);
+            .replace("{F}", format);
         },
         "tileSize": new google.maps.Size(256, 256),
         "name": name,
@@ -80,27 +81,33 @@
     Basemap = function(map) {
 
       var baseType = new google.maps.BasemapMapType(window.devicePixelRatio == 1 ? 'geolandbasemap' : 'bmaphidpi'),
-        satType = new google.maps.BasemapMapType('bmaporthofoto30cm'),
+        terrainType = new google.maps.BasemapMapType('bmapgelaende'),
+        satelliteType = new google.maps.BasemapMapType('bmaporthofoto30cm'),
         overlayType = new google.maps.BasemapMapType('bmapoverlay'),
         allowedBounds = new google.maps.LatLngBounds(
           new google.maps.LatLng(46.41, 9.53),
           new google.maps.LatLng(49.02, 17.17)
         ),
         typeChangeListener = map.addListener('maptypeid_changed', function() {
-
+          // Terrain tiles
+          if (map.getMapTypeId() == 'terrain') {
+            map.overlayMapTypes.clear()
+            map.overlayMapTypes.insertAt(0, terrainType);
+          }
+          // Sattelite tiles displayed for both 'hybrid' and 'satellite'
           if (map.getMapTypeId() == 'hybrid' || map.getMapTypeId() == 'satellite') {
             map.overlayMapTypes.clear()
-            map.overlayMapTypes.insertAt(0, satType);
+            map.overlayMapTypes.insertAt(0, satelliteType);
           }
-
-          if (map.getMapTypeId() == 'hybrid')
+          // For 'hybrid' and 'terrain' also caption layer is added
+          if (map.getMapTypeId() == 'hybrid' || map.getMapTypeId() == 'terrain') {
             map.overlayMapTypes.insertAt(1, overlayType);
-
-          if (map.getMapTypeId() == 'roadmap' || map.getMapTypeId() == 'terrain') {
+          }
+          // Default type is usually 'roadmap'
+          if (map.getMapTypeId() == 'roadmap') {
             map.overlayMapTypes.clear()
             map.overlayMapTypes.push(baseType);
           }
-
         }),
         centerChangeListener = google.maps.event.addListener(map, 'center_changed', function() {
           if (allowedBounds.contains(map.getCenter())) return;
