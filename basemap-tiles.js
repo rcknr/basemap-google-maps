@@ -60,8 +60,7 @@
 
           if (x > ne.x || y < ne.y || x < sw.x || y > sw.y) return null;
 
-          return "//maps{S}.wien.gv.at/basemap/{N}/normal/google3857/{Z}/{Y}/{X}.{E}"
-            .replace("{S}", index ? index : '')
+          return "//mapsneu.wien.gv.at/basemap/{N}/normal/google3857/{Z}/{Y}/{X}.{E}"
             .replace("{N}", name)
             .replace("{Z}", zoom)
             .replace("{X}", x)
