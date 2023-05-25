@@ -1,0 +1,24 @@
+name: Minify Workflow
+on:
+  pull_request:
+    paths:
+      - 'basemap-tiles.js'
+    types:
+      - closed
+
+jobs:
+  minify:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install minify
+        run: sudo apt-get install -y minify
+
+      - name: Minify Javascript
+        run: minify -o basemap-tiles.min.js basemap-tiles.js
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Minify source code
