@@ -1,9 +1,14 @@
 name: Minify Workflow
 on:
-  push:
+  pull_request:
+    paths:
+      - 'basemap-tiles.js'
+    types:
+      - closed
 
 jobs:
-  build:
+  minify:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
